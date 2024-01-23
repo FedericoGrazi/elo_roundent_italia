@@ -23,7 +23,12 @@ Parametri da inserire:
 
 ### `simul_torneo`
 Parametri da inserire
-1.
+1. `data`: file che deve essere formattato in questa maniera
+
+<img src="https://github.com/FedericoGrazi/elo_roundent_italia/blob/main/simulazioni/input simmul.jpg?raw=true" alt="plot" width="350"/>
+
+2. `elo_ratings`: un ranking restituito dalla funzione `elo_tornei`.
+   
 ## Cartella`dataset`
 Sono stati caricati in `.xlsx` i file formattati nella stessa maniera dei tornei presi in considerazione per il ranking.
 La legenda per i file è:
