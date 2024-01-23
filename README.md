@@ -8,6 +8,7 @@ Il risultato del ranking si può vedere a questo [link](https://docs.google.com/
 Per ora la divisione è solamente apparente, in quanto i tornei open, femminili e misti influiscono sullo stesso ranking.
 
 [!NOTE]
+
 Il sistema non ha necessariamente raggiunto la sua forma finale. Ci potrebbero essere variazioni nei parametri della formula per adattare ulteriormente il sistema alla scena sportiva italiana.
 
 ## Cartella `scripts` 
