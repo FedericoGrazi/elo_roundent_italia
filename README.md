@@ -12,7 +12,10 @@ Per ora la divisione è solamente apparente, in quanto i tornei open, femminili 
 
 ## Cartella `scripts` 
 La cartella contiene tutti i file necessari per riprodurre il sistema RIR. Il file `function_elo` contiene tutte le funzioni per utilizzare il sistema e fare le simulazioni
-
+Istruzione per usare le funzioni
+### `elo_tornei`
+Parametri da inserire:  
+1. `data`: file excel importato in R. 
 
 ## Cartella`dataset`
 Sono stati caricati in `.xlsx` i file formattati nella stessa maniera dei tornei presi in considerazione per il ranking.
