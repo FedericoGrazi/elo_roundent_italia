@@ -7,7 +7,7 @@ Il progetto è open-source ed è stato compilato interamente su R con l'aiuto di
 Il risultato del ranking si può vedere a questo [link](https://docs.google.com/spreadsheets/d/13FbtZEBHiLP55SYc5CCueYtzcvP2WgjJUsmjRe2vlCk/edit?usp=sharing) in cui è presente il ranking diviso in femminile e maschile. 
 Per ora la divisione è solamente apparente, in quanto i tornei open, femminili e misti influiscono sullo stesso ranking.
 
->**Note**  
+>[!NOTE]  
 >Il sistema non ha necessariamente raggiunto la sua forma finale. Ci potrebbero essere variazioni nei parametri della formula per adattare ulteriormente il sistema alla scena sportiva italiana.
 
 ## Cartella `scripts` 
