@@ -4,6 +4,9 @@ Il sistema di [punteggi ELO](https://it.m.wikipedia.org/wiki/Elo_(scacchi)) è u
 L'idea di implementare l'ELO generando il RIR (Roundnet Italia Ranking) è nata dalla necessità di avere un sistema di ranking nello sport, e l'implementazione dell'ELO aggiustato con criteri simili al [RGX](https://playerzone.roundnetgermany.de/ranking/rg-index/) (Roundet Germany Index) ha generato un sistema funzionale per il ranking di Roundnet Italia.
 Il progetto è open-source ed è stato compilato interamente su R con l'aiuto di Tommaso Marzozzi.
 
+Il risultato del ranking si può vedere a questo [link](https://docs.google.com/spreadsheets/d/13FbtZEBHiLP55SYc5CCueYtzcvP2WgjJUsmjRe2vlCk/edit?usp=sharing) in cui è presente il ranking diviso in femminile e maschile. 
+Per ora la divisione è solamente apparente, in quanto i tornei open, femminili e misti influiscono sullo stesso ranking.
+
 ## Cartella `scripts` 
 La cartella contiene tutti i file necessari per riprodurre il sistema RIR. Il file `function_elo` contiene tutte le funzioni per utilizzare il sistema e fare le simulazioni
 
