@@ -30,6 +30,9 @@ La formula per calcolare la probabilità di vittoria della squadra A contro la s
 $$\frac{1}{1+10^{\frac{ELO_B - ELO_A}{400}}} $$
 Per richieste di simulazione scrivetemi in pvt.
 
+Un esempio di simulazione è calcolare la probabilità di vittoria ai Nationals, e fare di nuovo i complimenti ad Andrea Borsotti per la vittoria! (cit)
+<img src="https://github.com/FedericoGrazi/elo_roundent_italia/blob/main/simulazioni/esempio_simulazione_nationals.jpg?raw=true" alt="plot" width="650"/>
+
 
 ## Cartella RCB
 Per tutti i tesserati che si lamentano dei manini all'interno dei vari ranking, ho inserito anche i file necessari per ottenere i punteggi dei vari eventi interni nella stagione 2024
