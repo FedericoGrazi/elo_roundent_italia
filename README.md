@@ -15,7 +15,10 @@ La cartella contiene tutti i file necessari per riprodurre il sistema RIR. Il fi
 Istruzione per usare le funzioni
 ### `elo_tornei`
 Parametri da inserire:  
-1. `data`: file excel importato in R. 
+1. `data`: file excel importato in R. Il formato di `.xslx` per far funzionare la funzione è questo. Prossimamente implementerò una funzione che trasformi i file di fwango direttamente in questo formato su R
+
+    <img src="https://github.com/FedericoGrazi/elo_roundent_italia/blob/main/datasets/esempio dataset input.jpg?raw=true" alt="plot" width="450"/>
+3. `elo_ratings`: possibilmente un output della funzione `elo_tornei`. Se lasciato vuoto inizializzerà tutti i giocatori con il valore di `elo_base`
 
 ## Cartella`dataset`
 Sono stati caricati in `.xlsx` i file formattati nella stessa maniera dei tornei presi in considerazione per il ranking.
@@ -42,3 +45,8 @@ Un esempio di simulazione è calcolare la probabilità di vittoria ai Nationals,
 
 ## Cartella RCB
 Per tutti i tesserati che si lamentano dei manini all'interno dei vari ranking, ho inserito anche i file necessari per ottenere i punteggi dei vari eventi interni nella stagione 2024.
+
+### `punti_evento`
+Sulla base della probabilità di vittoria del sistema ELO, assegna in maniera meritocratica i punti disponibili per il torneino. 
+Facendo riferimento quanto un giocatore ha giocato bene nel torneino gli si assegna una *potenza* che viene utilizzata come punteggio per calcolare i punti vinti.
+Il concetto è il medesimo del *Strength of Schedule* utilizzato negli sports analytics: a posteriori valutiamo quanto sia forte un giocatore sulla base di quanto ha performato bene, poi andiamo a ritroso a confrontare le partite che ha giocato.
