@@ -25,7 +25,9 @@ La legenda per i file è:
   - `femminile`: RCB Winter Special Femminile,
 
 ## Cartella `simulazioni`
-Utilizzando l'ELO è possibile ricavare una probabilità di vittoria. Con questa probabilità si può poi simulare partite e intere tornei sulla base di una distribuzione di Bernuolli con parametro la probabilità di vittoria.
+Utilizzando l'ELO è possibile ricavare una probabilità di vittoria. Con questa probabilità si può poi simulare partite e intere tornei sulla base di una distribuzione di Bernuolli con parametro la probabilità di vittoria. 
+La formula per calcolare la probabilità di vittoria della squadra A contro la squadra B è
+$$\frac{1}{1+10^{\frac{ELO_B - ELO_A}{400}}$$
 Per richieste di simulazione scrivetemi in pvt.
 
 
