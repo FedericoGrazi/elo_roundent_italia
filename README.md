@@ -11,15 +11,19 @@ Per ora la divisione è solamente apparente, in quanto i tornei open, femminili 
 >Il sistema non ha necessariamente raggiunto la sua forma finale. Ci potrebbero essere variazioni nei parametri della formula per adattare ulteriormente il sistema alla scena sportiva italiana.
 
 ## Cartella `scripts` 
-La cartella contiene tutti i file necessari per riprodurre il sistema RIR. Il file `function_elo` contiene tutte le funzioni per utilizzare il sistema e fare le simulazioni
+La cartella contiene tutti i file necessari per riprodurre il sistema RIR. 
+Il file `function_elo` contiene tutte le funzioni per utilizzare il sistema e fare le simulazioni
 Istruzione per usare le funzioni
 ### `elo_tornei`
 Parametri da inserire:  
 1. `data`: file excel importato in R. Il formato di `.xslx` per far funzionare la funzione è questo. Prossimamente implementerò una funzione che trasformi i file di fwango direttamente in questo formato su R
 
     <img src="https://github.com/FedericoGrazi/elo_roundent_italia/blob/main/datasets/esempio dataset input.jpg?raw=true" alt="plot" width="450"/>
-3. `elo_ratings`: possibilmente un output della funzione `elo_tornei`. Se lasciato vuoto inizializzerà tutti i giocatori con il valore di `elo_base`
+2. `elo_ratings`: possibilmente un output della funzione `elo_tornei`. Se lasciato vuoto inizializzerà tutti i giocatori con il valore di `elo_base`
 
+### `simul_torneo`
+Parametri da inserire
+1.
 ## Cartella`dataset`
 Sono stati caricati in `.xlsx` i file formattati nella stessa maniera dei tornei presi in considerazione per il ranking.
 La legenda per i file è:
@@ -34,10 +38,11 @@ La legenda per i file è:
 Utilizzando l'ELO è possibile ricavare una probabilità di vittoria. Con questa probabilità si può poi simulare partite e intere tornei sulla base di una distribuzione di Bernuolli con parametro la probabilità di vittoria. 
 La formula per calcolare la probabilità di vittoria della squadra A contro la squadra B è
 $$\frac{1}{1+10^{\frac{ELO_B - ELO_A}{400}}} $$
-Per richieste di simulazione scrivetemi in pvt.
 
 Un esempio di simulazione è calcolare la probabilità di vittoria ai Nationals, e fare di nuovo i complimenti ad Andrea Borsotti per la vittoria! (cit)
 <img src="https://github.com/FedericoGrazi/elo_roundent_italia/blob/main/simulazioni/esempio_simulazione_nationals.jpg?raw=true" alt="plot" width="650"/>
+
+Per richieste di simulazione scrivetemi in pvt.
 
 >[!WARNING]  
 >Per ora è possibile fare simulazioni solamente con 16 squadre e tutti i giocatori devono essere presenti nel ranking
