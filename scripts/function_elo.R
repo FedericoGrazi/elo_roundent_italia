@@ -612,21 +612,9 @@ create_bracket <- function(last, g1 = c(1,8,4,5,2,7,3,6),g2 = c(16,9,13,12,15,10
 
 simul_torneo <-  function(data, elo_ratings = NULL,win_ass = 400,diff_max = 0.92){
   library(tidyverse)
-  
-  if(is.null(elo_ratings)){
-    elo_ratings <- data.frame(giocatore = as.character(data[1,1]), nuovo_elo = elo_base,conta_tornei = 0)
-  }else if(ncol(elo_ratings) == 2){
-    elo_ratings <- elo_ratings
-  }else if(ncol(elo_ratings)==3){
-    elo_ratings <- elo_ratings[,c(1,3)]
-  }else if(ncol(elo_ratings)==4){
-    elo_ratings <- elo_ratings[,c(1,3,4)]
-  }else{
-    print("Controllare dimensioni e formato degli elo inseriti")
-    break()
-  }
-  
-  gir <-suppressMessages( data %>% 
+  elo_ratings <<- elo_ratings[,c(1,3,4)]
+  gir <-
+  data %>% 
     mutate(rwo  = 1:nrow(simul)) %>% 
     group_by(rwo)%>%
     mutate(elo = mean(c(e1,e2))) %>% 
@@ -636,7 +624,7 @@ simul_torneo <-  function(data, elo_ratings = NULL,win_ass = 400,diff_max = 0.92
     mutate(gironi = rep(c(1:4,4:1),times = 2)) %>% 
     select(g1,g2,elo,gironi) %>% 
     group_by(gironi) %>% 
-    mutate(team = paste(g1,g2,sep = " & ")))
+    mutate(team = paste(g1,g2,sep = " & "))
   
   b = tibble(g1 = "a",g2="a",g3="a",g4="a")
   for(i in 1:4){
