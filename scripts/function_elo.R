@@ -687,6 +687,6 @@ simul_torneo <-  function(data, elo_ratings = NULL,win_ass = 400,diff_max = 0.92
   br5 = create_bracket(br4,g1 = c(1),g2 = c(2),rank = c(1))
   
   winner = br5$value
-  
+  rm(elo_ratings)
   return(winner)
 }
