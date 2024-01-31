@@ -2,18 +2,8 @@ library(readxl)
 library(tidyverse)
 library(xlsx)
 
-# Punti evento del ranking vanno calcolati sulla base della potenza del torneo stesso
-
-# Punti elo possono essere usati richiamando gli elo già utilizzati, in maniera tale
-# da avere un sistema continuativo
-
-## LAURA LUCCHIARI è `laura`
-## FULVIO FACCHINI è `fulvs`
-## NICOLE BIONDINI è `niki`
-
 ## K = 40 per INIZIALIZZAZIONE
 ## K = 20 per TORNEI BASE
-## K = QUELLO CHE VOGLIO IO PER RCB
 
 ## ELO BASE 1000 PER WOMEN
 ## ELO BASE 1200 PER OPEN
