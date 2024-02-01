@@ -3,83 +3,86 @@ elo_tornei <-  function(data, elo_ratings = NULL, coeff = 20, elo_base = 1000, d
   
   library(tidyverse)
 
-  if(is.null(elo_ratings)){
-    elo_ratings <- data.frame(giocatore = as.character(data[1,1]), nuovo_elo = elo_base,conta_tornei = 0)
-  }else if(ncol(elo_ratings) == 2){
-    elo_ratings <- elo_ratings
-  }else if(ncol(elo_ratings)==3){
-    elo_ratings <- elo_ratings[,c(1,3)]
-  }else if(ncol(elo_ratings)==4){
-    elo_ratings <- elo_ratings[,c(1,3,4)]
-  }else{
-    print("Controllare dimensioni e formato degli elo inseriti")
-    break()
+  partecipanti <- sort(unique(c(data$g1,data$g2,data$g3,data$g4)))
+   
+  
+  if (!is.null(elo_ratings)) {
+    ckeep <-  c("giocatore","nuovo_elo","conta_tornei")
+    elo_ratings = as.data.frame(elo_ratings[,ckeep])
+    npadd <- partecipanti[!(partecipanti %in% elo_ratings$giocatore)]
+    zv <- rep(0, length(npadd))
+    
+    new_rank <- data.frame(giocatore = npadd,
+                           nuovo_elo = rep(elo_base, length(npadd)),
+                           conta_tornei = rep(0, length(npadd)))
+    
+    if (!("nuovo_elo" %in% names(elo_ratings))) 
+      elo_ratings <- cbind(elo_ratings, nuovo_elo = 0)
+    if (!("conta_tornei" %in% names(elo_ratings))) 
+      elo_ratings <- cbind(elo_ratings, conta_tornei = 0)
+    
+    elo_ratings <- as_tibble(rbind(elo_ratings, new_rank))
+    
+  }else {
+    elo_ratings <- tibble(
+      giocatore = partecipanti,
+      nuovo_elo = elo_base,
+      conta_tornei = 0
+    )
   }
   
+  totset = data$w1 + data$w2
+  
+  data$w1 = case_when(
+    data$w1/totset == 2/3 ~.75,
+    data$w1/totset == 1/3 ~.25,
+    TRUE ~ data$w1/totset)
+  
+  data$w2 = case_when(
+    data$w2/totset == 2/3 ~.75,
+    data$w2/totset == 1/3 ~.25,
+    TRUE ~ data$w2/totset)
 
-  data <- data %>% 
-    mutate(tot_set = w1+w2,
-           w1 = case_when(
-             w1/tot_set == 2/3 ~ 0.75,
-             w1/tot_set == 1/3 ~ 0.25,
-             TRUE ~ w1/tot_set
-           ),
-           w2 = case_when(
-             w2/tot_set == 2/3 ~ 0.75,
-             w2/tot_set == 1/3 ~ 0.25,
-             TRUE ~ w2/tot_set
-           ),
-           w = case_when(
-             tot_set == 1~.75,
-             TRUE ~1
-           )) %>% 
-    select(-tot_set)
+    plindex = match(partecipanti, elo_ratings$giocatore)
+    
+    onplay = elo_ratings$giocatore[plindex]
+    outplay = elo_ratings$giocatore[-plindex]
+    onrat = elo_ratings$nuovo_elo[plindex]
+    outrat = elo_ratings$nuovo_elo[-plindex]
+    onct = elo_ratings$conta_tornei[plindex]
+    outct = elo_ratings$conta_tornei[-plindex]
   
-  w <- data %>% 
-    mutate(game = 1:nrow(data)) %>% 
-    select(game, w)
-  
-  data <- data %>% select(-w)
-  
-  partecipanti <- data %>% 
-    pivot_longer(names_to = "squadra",values_to = "giocatore", cols = g1:g4) %>% 
-    group_by(giocatore) %>% 
-    summarize(n=n()) %>% 
-    mutate(partecipante = 0) %>% 
-    select(-n)
-  
-  elo_ratings_full <- suppressMessages( full_join(elo_ratings,partecipanti) %>% 
-    mutate(
-      nuovo_elo = ifelse(is.na(nuovo_elo),elo_base, nuovo_elo),
-      conta_tornei = ifelse(is.na(conta_tornei),0, conta_tornei),
-           ) %>% 
-    select(-partecipante) )
-  
-  rob <- data %>% 
-    mutate(perc1 = 1,perc2 = 3,perc3=4,perc4=5,
-           ct1 = 1, ct2 = 2, ct3 = 3, ct4 = 4)
-  
+    
+    g1 = match(data$g1,elo_ratings$giocatore)
+    g2 = match(data$g2,elo_ratings$giocatore)
+    g3 = match(data$g3,elo_ratings$giocatore)
+    g4 = match(data$g4,elo_ratings$giocatore)
+    
+    data$elo1 = elo_ratings$nuovo_elo[g1]
+    data$elo2 = elo_ratings$nuovo_elo[g2]
+    data$elo3 = elo_ratings$nuovo_elo[g3]
+    data$elo4 = elo_ratings$nuovo_elo[g4]
+    
+    data$ct1 = elo_ratings$conta_tornei[g4]
+    data$ct2 = elo_ratings$conta_tornei[g4]
+    data$ct3 = elo_ratings$conta_tornei[g4]
+    data$ct4 = elo_ratings$conta_tornei[g4]
+    
+    data$game = 1:nrow(data)
+    data$w = ifelse(totset == 1,.75,1)
 
-  for(i in 1:nrow(data)){
-    for(j in 1:4){
-      a <- data[i,j]
-      indent <- which(elo_ratings_full[,1] == as.character(a))
-      
-      rob[i,j+6] <- elo_ratings_full$nuovo_elo[indent] 
-      rob[i,j+10] <- elo_ratings_full$conta_tornei[indent]
-      
-    }
-  }
 
-  last <-  rob %>% 
-    mutate(game = 1:nrow(rob),
-           w = w$w) %>% 
+    
+
+  last <-  data %>% 
     group_by(game) %>% 
     mutate(
-      pot1 = mean(c(perc1,perc2)),
-      pot2 = mean(c(perc3,perc4)),
-      expA = 1/(1+10^((pot2-pot1)/win_ass)),
-      expB = 1/(1+10^((pot1-pot2)/win_ass)),
+      telo1 = mean(c(elo1,elo2)),
+      telo2 = mean(c(elo3,elo4)),
+      
+      expA = 1/(1+10^((telo2-telo1)/win_ass)),
+      expB = 1/(1+10^((telo1-telo2)/win_ass)),
+      
       diffA = case_when(
         expA > diff_max ~ w1 - diff_max,
         expA < 1- diff_max ~ w1- (1- diff_max),
@@ -88,58 +91,60 @@ elo_tornei <-  function(data, elo_ratings = NULL, coeff = 20, elo_base = 1000, d
         expB > diff_max ~ w2 - diff_max,
         expB < 1- diff_max ~ w2 - (1-diff_max),
         TRUE ~ w2-expB),
-      eloA1 = case_when( ct1<4~ w * coeff_nuovi * diffA, perc1 >2400 ~ w * 10 *diffA, TRUE ~ w * coeff * diffA),
-      eloA2 = case_when( ct2<4~ w * coeff_nuovi * diffA, perc2 >2400 ~ w * 10 *diffA, TRUE ~ w * coeff * diffA),
-      eloB3 = case_when( ct3<4~ w * coeff_nuovi * diffB, perc3 >2400 ~ w * 10 *diffB, TRUE ~ w * coeff * diffB),
-      eloB4 = case_when( ct4<4~ w * coeff_nuovi * diffB, perc4 >2400 ~ w * 10 *diffB, TRUE ~ w * coeff * diffB)
+      eloA1 = case_when( ct1<4~ w * coeff_nuovi * diffA, elo1 >2400 ~ w * 10 *diffA, TRUE ~ w * coeff * diffA),
+      eloA2 = case_when( ct2<4~ w * coeff_nuovi * diffA, elo2 >2400 ~ w * 10 *diffA, TRUE ~ w * coeff * diffA),
+      eloB3 = case_when( ct3<4~ w * coeff_nuovi * diffB, elo3 >2400 ~ w * 10 *diffB, TRUE ~ w * coeff * diffB),
+      eloB4 = case_when( ct4<4~ w * coeff_nuovi * diffB, elo4 >2400 ~ w * 10 *diffB, TRUE ~ w * coeff * diffB)
     ) %>% 
     ungroup %>% 
-    select(g1:g4,eloA1:eloB4) %>% 
-    pivot_longer(cols = g1:g4) %>% 
+    pivot_longer(cols = g1:g4, values_to = "giocatore") %>% 
     mutate(punt = case_when(
       name == "g1" ~ eloA1,
       name == "g2" ~ eloA2,
       name == "g3" ~ eloB3,
       name == "g4" ~ eloB4,
     )) %>% 
-    select(value, punt) %>% 
-    group_by(value) %>% 
-    summarize(elo_dell_evento = sum(punt)) %>% 
-    arrange(-elo_dell_evento) %>% 
-    rename(giocatore = value)
-  
-  final = suppressMessages( full_join(last,elo_ratings_full) %>% 
     group_by(giocatore) %>% 
-    mutate(elo_dell_evento = ifelse(is.na(elo_dell_evento),0,round(elo_dell_evento,0)),
-           nuovo_elo = nuovo_elo + elo_dell_evento,
-           nuovo_elo = ifelse(nuovo_elo<900, 900, nuovo_elo)) %>% 
-    arrange(-nuovo_elo) %>% 
-    mutate(conta_tornei = case_when(
-      isFALSE(conta_tornei_attivo) ~ conta_tornei,
-      isTRUE(conta_tornei_attivo) & elo_dell_evento != 0 ~ conta_tornei +1, 
-      isTRUE(conta_tornei_attivo) & elo_dell_evento == 0 ~ conta_tornei, 
-    )
-  ) %>% ungroup %>% 
-    filter(giocatore != "nessuno")
-  )
+    summarize(elo_dell_evento = sum(punt)) 
   
-  print(final, n= 100)
-  return(final)
+    last = last[order(last$giocatore),]
+    
+    if(conta_tornei_attivo == T) onct <- onct +1 
+  
+    elo_ratings = tibble(
+      giocatore = c(onplay,outplay),
+      elo_dell_evento = c(round(last$elo_dell_evento,0), rep(0,length(outplay))),
+      nuovo_elo = c(onrat+last$elo_dell_evento,outrat),
+      conta_tornei = c(onct, outct)
+    )
+    
+    elo_ratings$nuovo_elo = ifelse(elo_ratings$nuovo_elo<900,900,elo_ratings$nuovo_elo)
+    elo_ratings = arrange(elo_ratings,-nuovo_elo)
+  
+  
+  print(elo_ratings, n= 100)
+  return(elo_ratings)
 }
 
 merge_elo_ratings <- function(elo1,elo2){
   
   elo1_chg <- elo1 %>% 
-    rename(tornei_elo1 = conta_tornei,
-           elo1 = nuovo_elo,
-           ede1 = elo_dell_evento)
+    transmute(
+      giocatore = giocatore,
+      elo1 = nuovo_elo,
+      tornei_elo1 = conta_tornei
+      )
+  
   elo2_chg <- elo2 %>% 
-    rename(tornei_elo2 = conta_tornei,
-           elo2 = nuovo_elo,
-           ede2 = elo_dell_evento)
+    transmute(
+      giocatore = giocatore,
+      elo2 = nuovo_elo,
+      tornei_elo2 = conta_tornei
+      )
   
   
   elo_tot <- suppressMessages( full_join(elo1_chg,elo2_chg) %>% 
+    group_by(giocatore) %>% 
     mutate(conta_tornei = case_when(
       is.na(tornei_elo2) ~ tornei_elo1,
       is.na(tornei_elo1) ~ tornei_elo2,
@@ -153,17 +158,11 @@ merge_elo_ratings <- function(elo1,elo2){
       tornei_elo1>tornei_elo2 ~ elo1,
       tornei_elo2>tornei_elo1 ~ elo2,
       TRUE ~ elo1
-    ), 
-    elo_dell_evento = case_when(
-      is.na(elo1) ~ ede2,
-      is.na(elo2) ~ ede1,
-      tornei_elo1>tornei_elo2 ~ ede1,
-      tornei_elo2>tornei_elo1 ~ ede2,
-      TRUE ~ elo1
     )) %>% 
-    select(giocatore, elo_dell_evento,nuovo_elo, conta_tornei)
+    select(giocatore,nuovo_elo, conta_tornei)
   )
   
+  elo_tot = arrange(elo_tot,-nuovo_elo)
   return(elo_tot)
 }
 
