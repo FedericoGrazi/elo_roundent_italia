@@ -1,4 +1,4 @@
-# Progetto ELO per Roundnet Italia
+# Progetto Ranking per Roundnet Italia
 
 Il sistema di [punteggi ELO](https://it.m.wikipedia.org/wiki/Elo_(scacchi)) è uno dei più noti sistemi di ranking ed è il sistema ufficiale di ranking per gli scacchi.
 L'idea di implementare l'ELO generando il RIR (Roundnet Italia Ranking) è nata dalla necessità di avere un sistema di ranking nello sport, e l'implementazione dell'ELO aggiustato con criteri simili al [RGX](https://playerzone.roundnetgermany.de/ranking/rg-index/) (Roundet Germany Index) ha generato un sistema funzionale per il ranking di Roundnet Italia.
